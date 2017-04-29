@@ -19,6 +19,39 @@ def load_dataset():
     dataset = pandas.read_csv(url, names=names)
     return dataset
 
+def load_models():
+    models = []
+    models.append(('LR', LogisticRegression()))
+    models.append(('LDA', LinearDiscriminantAnalysis()))
+    models.append(('KNN', KNeighborsClassifier()))
+    models.append(('CART', DecisionTreeClassifier()))
+    models.append(('NB', GaussianNB()))
+    models.append(('SVM', SVC()))
+    return models
+
+def run_all_models():
+    models = load_models()
+    main_dataset = load_dataset()
+
+    datasets = create_validation(main_dataset)
+    X_train = datasets['X_train']
+    Y_train = datasets['Y_train']
+    X_validation = datasets['X_validation']
+    Y_validation = datasets['X_validation']
+    results = []
+    names = []
+
+    seed = 7
+    scoring = 'accuracy'
+
+    for name, model in models:
+	kfold = model_selection.KFold(n_splits=10, random_state=seed)
+	cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
+	results.append(cv_results)
+	names.append(name)
+	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+	print(msg)
+
 
 def data_summary(dataset):
     print(dataset.describe())
@@ -43,3 +76,9 @@ def create_validation(dataset):
     validation_size = 0.20
     seed = 7
     X_train, X_validation, Y_train, Y_validation = model_selection.train_test_split(X, Y, test_size=validation_size, random_state=seed)
+    datasets = {}
+    datasets['X_train']= X_train
+    datasets['Y_train'] = Y_train
+    datasets['X_validation'] = X_validation
+    datasets['X_validation'] = Y_validation
+    return datasets
