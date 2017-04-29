@@ -5,6 +5,14 @@ This is my first baby machine learning project so take it easy. Also, it's prett
 
 It was very handholdy, but I have literally zero idea about what I'm doing so I was kind of relieved about that.
 
+## What is it?
+Good question. Basically, some guy called [Ronald Fisher](https://en.wikipedia.org/wiki/Iris_flower_data_set) took 50 measurements for 3 different varieties of Iris flowers back in 1936. Little did he know that this would become the 'Hello-World' dataset of machine learning nearly a century later.
+The idea of this programme is to compare the effectiveness of different classification models on the Iris data set. After finding the best classification method, it's then possible to guess what type of Iris a flower is given its petal measurements! find the best classification method for the dataset and then make predictions on what type of Iris flower
+
+![alt text](https://maxpull-gdvuch3veo.netdna-ssl.com/wp-content/uploads/2012/05/Siberian-iris.jpg "Sick Flower Pic")
+
+
+
 ## How to get this steaming hot flowery mess of a programme running
 ### 1) Clone this repo
 ```
