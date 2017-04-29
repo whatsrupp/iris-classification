@@ -13,11 +13,14 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 
 
-def load_dataset():
+def initial_data_load():
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
     names = ['sepal-length', 'sepal-width', 'petal-length', 'petal-width', 'class']
     dataset = pandas.read_csv(url, names=names)
-    return dataset
+    return [dataset, names]
+
+main_dataset = initial_data_load()[0]
+names = initial_data_load()[1]
 
 def load_models():
     models = []
@@ -31,9 +34,9 @@ def load_models():
 
 def run_all_models():
     models = load_models()
-    main_dataset = load_dataset()
 
-    datasets = create_validation(main_dataset)
+
+    datasets = create_validation()
     X_train = datasets['X_train']
     Y_train = datasets['Y_train']
     X_validation = datasets['X_validation']
@@ -49,28 +52,36 @@ def run_all_models():
 	cv_results = model_selection.cross_val_score(model, X_train, Y_train, cv=kfold, scoring=scoring)
 	results.append(cv_results)
 	names.append(name)
-	msg = "%s: %f (%f)" % (name, cv_results.mean(), cv_results.std())
+	msg = "Accuracy of %s cross-validation method: %f (%f)" % (name, cv_results.mean(), cv_results.std())
 	print(msg)
+    plot_cross_validation_results(results)
 
+def plot_cross_validation_results(results):
+    fig = plt.figure()
+    fig.suptitle('Algorithm Comparison')
+    ax = fig.add_subplot(111)
+    plt.boxplot(results)
+    ax.set_xticklabels(names)
+    plt.show()
 
 def data_summary(dataset):
     print(dataset.describe())
 
-def show_box_and_whisker_plot(dataset):
+def plot_box_and_whisker(dataset):
     dataset.plot(kind='box', subplots=True, layout=(2,2), sharex=False, sharey=False)
     plt.show()
 
-def show_histogram(dataset):
+def plot_histogram(dataset):
     dataset.hist()
     plt.show()
 
 
-def show_multivariate_scatter_plot(dataset):
+def plot_multivariate_scatter(dataset):
     scatter_matrix(dataset)
     plt.show()
 
-def create_validation(dataset):
-    array = dataset.values
+def create_validation():
+    array = main_dataset.values
     X = array[:,0:4]
     Y = array[:,4]
     validation_size = 0.20
